@@ -1,1 +1,31 @@
+# Case Study #1: Danny's Diner
 
+## Case Study Questions
+
+1. What is the total amount each customer spent at the restaurant?
+2. How many days has each customer visited the restaurant?
+3. What was the first item from the menu purchased by each customer?
+4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+5. Which item was the most popular for each customer?
+6. Which item was purchased first by the customer after they became a member?
+7. Which item was purchased just before the customer became a member?
+10. What is the total items and amount spent for each member before they became a member?
+11. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+12. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+***
+
+### 1. What is the total amount each customer spent at the restaurant?
+```SQl
+SELECT Customer_ID, SUM(Price) AS Total_amount_spent
+FROM Sales S
+JOIN Menu M ON S.Product_ID=M.Product_ID
+GROUP BY Customer_ID
+ORDER BY Customer_ID ASC;
+```
+
+#### Result set:
+| customer_id | total_sales |
+| ----------- | ----------  |
+| A           | 76          |
+| B           | 74          |
+| C           | 36          |
