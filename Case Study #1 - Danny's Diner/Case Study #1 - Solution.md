@@ -238,6 +238,26 @@ GROUP BY sales.customer_id;
 ***
 
 ###  10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January
+```sql
+SELECT customer_id,
+        SUM(IF (order_date BETWEEN join_date AND DATE_ADD(join_date,INTERVAL 6 DAY), price*10*2,
+            IF (product_name='sushi', price*10*2,price*10))) AS customer_points
+FROM menu
+JOIN sales USING (product_id)
+JOIN members USING (customer_id)
+WHERE order_date <= '2021-01-31'
+AND order_date >= join_date
+GROUP BY customer_id
+ORDER BY customer_id;
+```
+#### Result set:
+| customer_id | customer_points |
+| ----------- | ----------------------|
+| A           | 1020                  |
+| B           | 320                   |
+
+
+***
 
 #### Steps
 1. Find the program_last_date which is 7 days after a customer joins the program (including their join date)
@@ -272,5 +292,51 @@ LEFT JOIN members
 JOIN menu
   ON sales.product_id = menu.product_id
 ORDER BY customer_id ASC, sales.order_date ASC;
-``` 
+```
+
+#### Result set:
+![QB1 result](https://github.com/Sn0wba1l/8Weeks_SQL_challenge/assets/100756361/e746f251-3a8e-4bee-b46c-6234467c6bd5)
+
+
+
+***
+
+#### Rank All The Things
+Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+
+```sql
+WITH customers_data AS (
+  SELECT 
+    sales.customer_id, 
+    sales.order_date,  
+    menu.product_name, 
+    menu.price,
+    CASE
+      WHEN members.join_date > sales.order_date THEN 'N'
+      WHEN members.join_date <= sales.order_date THEN 'Y'
+      ELSE 'N' END AS member_status
+  FROM sales
+  LEFT JOIN members
+    ON sales.customer_id = members.customer_id
+  JOIN menu
+    ON sales.product_id = menu.product_id
+  ORDER BY members.customer_id, sales.order_date
+)
+
+SELECT *,
+CASE 
+WHEN member_status='N' THEN NULL
+ELSE Rank() OVER(
+    Partition BY customer_id, member_status
+    ORDER BY order_date) END AS ranking
+FROM customers_data
+ORDER BY customer_id;
+```
+
+#### Result set:
+![QB2 result](https://github.com/Sn0wba1l/8Weeks_SQL_challenge/assets/100756361/957e87b3-064e-4b1b-afe1-3cca2b5810ba)
+
+***
+
+
 
