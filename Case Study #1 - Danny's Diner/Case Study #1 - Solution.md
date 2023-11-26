@@ -242,12 +242,12 @@ GROUP BY sales.customer_id;
 #### Steps
 1. Find the program_last_date which is 7 days after a customer joins the program (including their join date)
 2. Determine the customer points for each transaction and for members with a membership
-- During the first week of the membership -> points = price*20 irrespective of the purchase item
-- Product = Sushi -> and order_date is not within a week of membership -> points = price*20
-- Product = Not Sushi -> and order_date is not within a week of membership -> points = price*10
+	- During the first week of the membership -> points = price*20 irrespective of the purchase item
+ 	- Product = Sushi -> and order_date is not within a week of membership -> points = price*20
+	- Product = Not Sushi -> and order_date is not within a week of membership -> points = price*10
 3. Conditions in WHERE clause
-- order_date <= '2021-01-31' -> Order must be placed before 31st January 2021
-- order_date >= join_date -> Points awarded to only customers with a membership
+	- order_date <= '2021-01-31' -> Order must be placed before 31st January 2021
+	- order_date >= join_date -> Points awarded to only customers with a membership
 
 
 
