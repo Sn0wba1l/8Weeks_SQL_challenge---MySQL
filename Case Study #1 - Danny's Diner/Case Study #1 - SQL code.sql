@@ -1,18 +1,18 @@
---Q1
+----------------------------------------------Q1
 SELECT Customer_ID, SUM(Price) AS Total_amount_spent
 FROM Sales S
 JOIN Menu M ON S.Product_ID=M.Product_ID
 GROUP BY Customer_ID
 ORDER BY Customer_ID ASC;
 
---Q2
+----------------------------------------------Q2
 SELECT Customer_ID, COUNT(DISTINCT order_date) AS Number_of_days_visited
 FROM Sales 
 GROUP BY Customer_ID
 ORDER BY Customer_ID;
 
---Q3
---ANS:
+----------------------------------------------Q3
+----------------------------------------------SOL 1:
 WITH ordered_sales AS (
 SELECT s.customer_ID,s.order_date,m.product_name,
     DENSE_RANK() OVER( PARTITION BY s.customer_id ORDER BY s.order_date) AS dense_rnk
@@ -26,7 +26,7 @@ FROM ordered_sales
 where dense_rnk=1
 GROUP BY customer_id, product_name;
 
---SOL:
+----------------------------------------------SOL 2:
 WITH ordered_sales AS (
   SELECT 
   sales.customer_id, 
@@ -47,7 +47,7 @@ FROM ordered_sales
 WHERE rnk = 1
 GROUP BY customer_id, product_name;
 
---Q4:
+----------------------------------------------Q4:
 SELECT m.Product_name, COUNT(s.product_id) AS most_purchased_item
 FROM sales s
 JOIN menu m
