@@ -72,6 +72,7 @@ INNER JOIN json_table(trim(replace(json_array(t.exclusions), ',', '","')), '$[*]
 INNER JOIN json_table(trim(replace(json_array(t.extras), ',', '","')), '$[*]' columns (extras varchar(50) PATH '$')) j2 ;
 
 SELECT * FROM customer_orders_temp;
+SELECT * FROM customer_orders;
 
 
 
@@ -96,6 +97,8 @@ INSERT INTO runner_orders VALUES
 ('9', '2', 'null', 'null', 'null', 'Customer Cancellation'),
 ('10', '1', '2020-01-11 18:50:20', '10km', '10minutes', 'null');
 
+
+SELECT * FROM runner_orders;
 
 DROP TABLE IF EXISTS runner_orders_temp;
 CREATE TABLE runner_orders_temp AS
@@ -159,7 +162,7 @@ JOIN json_table(trim(replace(json_array(t.toppings), ',', '","')), '$[*]' column
 );
 
 SELECT * FROM pizza_recipe_vertical;
-
+SELECT * FROM pizza_recipe;
 
 
 
