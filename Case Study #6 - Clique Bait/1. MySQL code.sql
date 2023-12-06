@@ -202,5 +202,19 @@ FROM combined_cte
 GROUP BY product_category;
 
 ---------------------------------------------------------------QC1
-
-user_i
+SELECT 
+user_id,visit_id,
+MIN(event_time) AS visit_start_time, 
+SUM(CASE WHEN event_type = 1 THEN 1 ELSE 0 END) AS page_views,
+SUM(CASE WHEN event_type = 2 THEN 1 ELSE 0 END) AS cart_adds, 
+SUM(CASE WHEN event_type = 3 THEN 1 ELSE 0 END) AS purchase,
+campaign_name,
+SUM(CASE WHEN event_type = 4 THEN 1 ELSE 0 END) AS impression,
+SUM(CASE WHEN event_type = 5 THEN 1 ELSE 0 END) AS click,
+GROUP_CONCAT(CASE WHEN product_id IS NOT NULL AND event_type = 2 THEN p.page_name ELSE NULL END,', ' ORDER BY sequence_number) AS cart_products
+FROM users
+JOIN events USING(cookie_id)
+LEFT JOIN campaign_identifier AS c  
+    ON event_time BETWEEN c.start_date AND c.end_date
+LEFT JOIN page_hierachy AS p USING (page_id)
+GROUP BY user_id, visit_id, campaign_name;
